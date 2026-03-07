@@ -6,4 +6,4 @@ This is where I put the stuff I build when a product experience bugs me enough t
 
 ---
 
-**Emeri Z.** · [LinkedIn](https://www.linkedin.com/in/emeriz) · Product Management
+**Emeri Z.** · [LinkedIn](https://www.linkedin.com/in/emeri-z/) · Product Management
