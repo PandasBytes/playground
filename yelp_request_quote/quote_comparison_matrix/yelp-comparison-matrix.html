@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yelp — Project Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #d32323; --red-dark: #af1c1c; --red-light: #fff0f0;
+  --blue: #0073bb; --green: #2e7d32; --green-bg: #e8f5e9; --green-border: #a5d6a7;
+  --orange: #f5a623;
+  --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0; --gray-500: #888; --gray-700: #444; --gray-900: #1a1a1a;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.11);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.13);
+}
+body { font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--gray-100); color: var(--gray-900); min-height: 100vh; }
+
+/* NAV */
+.yelp-nav { background: #fff; height: 56px; padding: 0 28px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.nav-search { flex: 1; max-width: 500px; display: flex; align-items: center; border: 1px solid var(--gray-300); border-radius: 4px; overflow: hidden; height: 36px; margin-left: 8px; }
+.nav-search input { flex: 1; padding: 0 12px; border: none; outline: none; font-size: 14px; font-family: inherit; color: var(--gray-700); }
+.nav-search-loc { padding: 0 12px; border-left: 1px solid var(--gray-200); font-size: 13px; color: var(--gray-700); white-space: nowrap; height: 100%; display: flex; align-items: center; }
+.nav-search-btn { background: var(--red); border: none; padding: 0 14px; cursor: pointer; height: 100%; display: flex; align-items: center; }
+.nav-spacer { flex: 1; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { font-size: 14px; font-weight: 600; color: var(--gray-700); text-decoration: none; }
+.nav-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--gray-200); display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; }
+
+/* LAYOUT */
+.app-layout { display: flex; height: calc(100vh - 56px); max-width: 1300px; margin: 0 auto; background: #fff; box-shadow: var(--shadow-lg); }
+
+/* SIDEBAR */
+.sidebar { width: 320px; flex-shrink: 0; border-right: 1px solid var(--gray-200); display: flex; flex-direction: column; background: #fff; }
+.back-link { padding: 14px 18px 10px; font-size: 13px; color: var(--gray-700); display: flex; align-items: center; gap: 6px; cursor: pointer; border-bottom: 1px solid var(--gray-100); }
+.back-link:hover { color: var(--gray-900); }
+.project-header { padding: 14px 18px 0; }
+.project-date-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.project-date { font-size: 12px; color: var(--gray-500); }
+.project-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+.project-tabs { display: flex; border-bottom: 1px solid var(--gray-200); margin: 0 -18px; padding: 0 18px; }
+.project-tab { padding: 10px 0; margin-right: 24px; font-size: 14px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.project-tab:hover { color: var(--gray-900); }
+.project-tab.active { color: var(--gray-900); border-bottom-color: var(--red); }
+.convo-list { flex: 1; overflow-y: auto; }
+.convo-item { padding: 13px 18px; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background 0.15s; display: flex; gap: 11px; align-items: flex-start; position: relative; }
+.convo-item:hover { background: var(--gray-50); }
+.c-av { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+.c-meta { flex: 1; min-width: 0; }
+.c-name { font-weight: 700; font-size: 13px; }
+.c-preview { font-size: 12px; color: var(--gray-500); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.c-time { font-size: 11px; color: var(--gray-500); position: absolute; top: 13px; right: 14px; }
+.q-dot { width: 8px; height: 8px; border-radius: 50%; position: absolute; bottom: 13px; right: 14px; }
+.q-dot.has { background: var(--green); }
+.q-dot.none { background: var(--gray-300); }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.details-header { padding: 20px 28px 0; border-bottom: 1px solid var(--gray-200); background: #fff; flex-shrink: 0; }
+.details-title-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+.details-title { font-size: 20px; font-weight: 700; }
+.details-meta { font-size: 13px; color: var(--gray-500); }
+.details-tabs { display: flex; }
+.details-tab { padding: 10px 0; margin-right: 28px; font-size: 14px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.details-tab:hover { color: var(--gray-900); }
+.details-tab.active { color: var(--gray-900); border-bottom-color: var(--red); }
+
+/* CONTROLS */
+.controls-bar { padding: 12px 28px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 10px; background: #fff; flex-shrink: 0; flex-wrap: wrap; }
+.ctrl-label { font-size: 12px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+.sort-btn { padding: 6px 13px; border: 1.5px solid var(--gray-200); border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; background: #fff; color: var(--gray-700); font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+.sort-btn:hover { border-color: var(--gray-500); }
+.sort-btn.active { background: var(--gray-900); color: #fff; border-color: var(--gray-900); }
+.ctrl-divider { width: 1px; height: 20px; background: var(--gray-200); flex-shrink: 0; }
+.filter-chip { padding: 5px 12px; border: 1.5px solid var(--gray-200); border-radius: 99px; font-size: 12px; font-weight: 600; cursor: pointer; background: #fff; color: var(--gray-700); font-family: inherit; transition: all 0.15s; display: flex; align-items: center; gap: 4px; }
+.filter-chip:hover { border-color: var(--red); color: var(--red); }
+.filter-chip.active { background: var(--red-light); border-color: var(--red); color: var(--red); }
+
+/* TABLE */
+.table-wrap { flex: 1; overflow-y: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th { padding: 11px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); border-bottom: 2px solid var(--gray-200); background: var(--gray-50); position: sticky; top: 0; z-index: 5; white-space: nowrap; cursor: pointer; user-select: none; }
+thead th:hover { color: var(--gray-900); }
+thead th.sorted { color: var(--gray-900); }
+thead th .sa { margin-left: 3px; opacity: 0.4; font-size: 10px; }
+thead th.sorted .sa { opacity: 1; color: var(--red); }
+tbody tr { border-bottom: 1px solid var(--gray-100); transition: background 0.12s; animation: rowIn 0.35s ease both; }
+tbody tr:nth-child(1) { animation-delay: 0.03s; }
+tbody tr:nth-child(2) { animation-delay: 0.07s; }
+tbody tr:nth-child(3) { animation-delay: 0.11s; }
+tbody tr:nth-child(4) { animation-delay: 0.15s; }
+tbody tr:nth-child(5) { animation-delay: 0.19s; }
+@keyframes rowIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+tbody tr:hover { background: var(--gray-50); }
+tbody tr.top-match { background: #fffef5; }
+tbody tr.top-match:hover { background: #fffbe0; }
+td { padding: 14px 16px; vertical-align: top; }
+
+/* Salon cell */
+.salon-cell { display: flex; align-items: flex-start; gap: 11px; }
+.s-av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.s-name { font-weight: 700; font-size: 14px; color: var(--gray-900); }
+.s-stars { color: var(--red); font-size: 11px; }
+.s-rc { color: var(--gray-500); font-size: 11px; margin-left: 2px; }
+.top-badge { display: inline-flex; align-items: center; gap: 3px; background: #fff8e1; border: 1px solid #ffe082; color: #e65100; font-size: 10px; font-weight: 700; border-radius: 3px; padding: 1px 6px; margin-top: 4px; }
+
+/* Price */
+.price-main { font-size: 17px; font-weight: 700; }
+.price-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.price-ext { font-size: 12px; color: var(--blue); margin-top: 2px; display: flex; align-items: center; gap: 3px; }
+
+/* Availability */
+.slots-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
+.slot-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border: 1.5px solid var(--gray-200); border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: #fff; color: var(--gray-700); font-family: inherit; transition: all 0.15s; width: fit-content; white-space: nowrap; }
+.slot-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+.slot-btn.ext:hover { border-color: var(--blue); color: var(--blue); background: #f0f7ff; }
+.slot-btn .ext-arrow { font-size: 10px; opacity: 0.7; }
+.slot-btn.booked { background: var(--green-bg); border-color: var(--green-border); color: var(--green); cursor: default; pointer-events: none; }
+
+/* Specialty */
+.spec-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.spec-badge.specialist { background: var(--green-bg); color: var(--green); }
+.spec-badge.verified { background: #e3f2fd; color: #0d47a1; }
+.spec-badge.generalist { background: var(--gray-100); color: var(--gray-500); }
+.spec-badge.parsed { background: #fff8e1; color: #e65100; }
+.spec-stylists { font-size: 12px; color: var(--gray-700); margin-top: 5px; line-height: 1.4; }
+.auto-flag { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--orange); font-weight: 600; margin-top: 4px; }
+
+/* Match reason */
+.match-reason { font-size: 13px; color: var(--gray-700); line-height: 1.45; max-width: 210px; }
+.match-none { font-size: 12px; color: var(--gray-400); font-style: italic; }
+
+/* Chat btn */
+.chat-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; background: var(--red); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+.chat-btn:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(211,35,35,0.25); }
+
+/* Empty */
+.empty-row td { padding: 32px; text-align: center; font-size: 14px; color: var(--gray-400); font-style: italic; }
+
+/* Toast */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gray-900); color: #fff; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: var(--shadow-lg); transition: transform 0.28s ease; z-index: 999; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="yelp-nav">
+  <img src="data:image/png;base64,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gZPTTxmOWN4y17SMEFR7K0nUs5064xmVv1L1DFn1Hp3dtVFUUUxE4nMTGZmY8dp9pwoRFHJLKyKJjpJHuDWtaMlxPYAepV0NnrZerPt3a6DUEj3VzGuc5r3dTo2ueS1hOTkgEfh29F12jNo9H6WvLrtSU9RV1If1U5q3h4p/4AAOR6E5I+Pqvfrt23b6reZrrnnshdZ9XaG80UW9tT8kTmZmOc4xiPEc8+f+kRFbPPhERAREQEREGCsFZKweyDRy0W7log5CIiAiIgIiIC4N/s9r1BZqqzXugp7hbqtnlz087A5j29+QfmAQe4IBHK5yIK3XTwZ7U1d5NbS1+pbfSueXGhhq43RtHo1rnxueB/E5x57hTDtZtro/bSxC06UtTKZruZ6mT36ioPxkk7n8OAPQBewRAREQEREBERAUMbq+GrbncXWjdV3X9q0NfIWmtbQ1DWMrOkADrDmuwcBoy0tyAfXkTOiDjWm30VptVJardTspqKjgZT08LPsxxsaGtaPkAAFyURAREQEREBERAREQEREBERAREQEREArU9lssINHLRbuWqD9kREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQFgrKFBoVqtysIN0REBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREGFhbFYQZREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREH/2Q==" height="26" alt="Yelp" style="display:block;flex-shrink:0;">
+  <div class="nav-search">
+    <input type="text" value="haircut, nail salons, plumbers" readonly>
+    <div class="nav-search-loc">52 Grenard Terrace, San Francisco, CA</div>
+    <button class="nav-search-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-links">
+    <a href="#">Yelp for Business</a>
+    <a href="#">Write a Review</a>
+    <div class="nav-icon">🔔</div>
+    <div class="nav-icon" style="background:var(--gray-300);color:var(--gray-700)">👤</div>
+  </div>
+</nav>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="back-link">← Back to Projects</div>
+    <div class="project-header">
+      <div class="project-date-row">
+        <span style="font-size:18px">🗺️</span>
+        <span class="project-date">Mar 6, 2026</span>
+      </div>
+      <div class="project-title">Haircut</div>
+      <div class="project-tabs">
+        <div class="project-tab" onclick="showToast('→ Switching to Messages...')">Messages</div>
+        <div class="project-tab active">Project Details</div>
+      </div>
+    </div>
+    <div class="convo-list">
+      <div class="convo-item">
+        <div class="c-av" style="background:#e8f5f5;color:#00695c">🌊</div>
+        <div class="c-meta">
+          <div class="c-name">Ocean Mirage Studio</div>
+          <div class="c-preview">$95 · Tmrw 2PM, 4:30PM, Fri 11AM</div>
+        </div>
+        <div class="c-time">10m</div>
+        <div class="q-dot has"></div>
+      </div>
+      <div class="convo-item">
+        <div class="c-av" style="background:#f5e8ff;color:#7b1fa2">U</div>
+        <div class="c-meta">
+          <div class="c-name">Union Cuts</div>
+          <div class="c-preview">$95 · Tmrw 2PM</div>
+        </div>
+        <div class="c-time">1h</div>
+        <div class="q-dot has"></div>
+      </div>
+      <div class="convo-item">
+        <div class="c-av" style="background:#fff8e1;color:#f57f17">M</div>
+        <div class="c-meta">
+          <div class="c-name">Milvali SF</div>
+          <div class="c-preview">$120+ · Tmrw 3PM, Fri 10AM ↗</div>
+        </div>
+        <div class="c-time">2h</div>
+        <div class="q-dot has"></div>
+      </div>
+      <div class="convo-item">
+        <div class="c-av" style="background:#f9e8f0;color:#c2185b">B</div>
+        <div class="c-meta">
+          <div class="c-name">Blake Charles Salon</div>
+          <div class="c-preview">$180 · 11:45AM–2:30PM</div>
+        </div>
+        <div class="c-time">3h</div>
+        <div class="q-dot has"></div>
+      </div>
+      <div class="convo-item">
+        <div class="c-av" style="background:#e8f5ff;color:#0288d1">C</div>
+        <div class="c-meta">
+          <div class="c-name">CODE Salon</div>
+          <div class="c-preview">Visit codesalonsf.com ↗</div>
+        </div>
+        <div class="c-time">12h</div>
+        <div class="q-dot none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="details-header">
+      <div class="details-title-row">
+        <div class="details-title">Compare Quotes</div>
+        <div class="details-meta">5 salons · 4 quotes received · SF · Long Hair · Asian Hair</div>
+      </div>
+      <div class="details-tabs">
+        <div class="details-tab active">All Quotes</div>
+        <div class="details-tab" onclick="showToast('Map view coming soon!')">Map View</div>
+        <div class="details-tab" onclick="showToast('Showing your original request...')">Your Request</div>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <span class="ctrl-label">Sort</span>
+      <button class="sort-btn active" id="sort-match" onclick="sortTable('match',this)">⭐ Best Match</button>
+      <button class="sort-btn" id="sort-pa" onclick="sortTable('price_asc',this)">Price ↑</button>
+      <button class="sort-btn" id="sort-pd" onclick="sortTable('price_desc',this)">Price ↓</button>
+      <button class="sort-btn" id="sort-soon" onclick="sortTable('soonest',this)">Soonest</button>
+      <div class="ctrl-divider"></div>
+      <span class="ctrl-label">Filter</span>
+      <button class="filter-chip" id="f-spec" onclick="toggleFilter('spec',this)">🌟 Specialists only</button>
+      <button class="filter-chip" id="f-inapp" onclick="toggleFilter('inapp',this)">📱 In-app booking only</button>
+      <button class="filter-chip" id="f-u100" onclick="toggleFilter('u100',this)">💰 Under $100</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('name',this)">Salon <span class="sa">↕</span></th>
+            <th onclick="sortTable('price_asc',this)" id="th-price">Price <span class="sa">↕</span></th>
+            <th>Availability <span style="font-size:10px;color:var(--gray-400);font-weight:400;text-transform:none;letter-spacing:0">(tap to book)</span></th>
+            <th>Specialty Match</th>
+            <th>Match Reason</th>
+            <th>Chat</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SALONS = [
+  {
+    id:'ocean', name:'Ocean Mirage Studio', emoji:'🌊',
+    bg:'#e8f5f5', fg:'#00695c',
+    stars:'★★★★★', rating:4.8, reviews:42,
+    priceVal:95, priceMain:'$95', priceSub:'+ $20 long hair surcharge',
+    slots:[
+      {label:'Tmrw 2:00 PM', ext:false},
+      {label:'Tmrw 4:30 PM', ext:false},
+      {label:'Fri 11:00 AM', ext:false},
+    ],
+    specType:'specialist', specLabel:'🌟 Asian Hair Specialist',
+    stylists:null, autoParsed:false,
+    matchReason:'<strong>34 reviews</strong> mention Asian hair · <strong>28 portfolio photos</strong> of Asian hair transformations',
+    isSpec:true, inApp:true, topMatch:true,
+  },
+  {
+    id:'union', name:'Union Cuts', emoji:'U',
+    bg:'#f5e8ff', fg:'#7b1fa2',
+    stars:'★★★★★', rating:5.0, reviews:49,
+    priceVal:95, priceMain:'$95', priceSub:'flat rate',
+    slots:[
+      {label:'Tmrw 2:00 PM', ext:false},
+    ],
+    specType:'verified', specLabel:'✓ Verified License',
+    stylists:null, autoParsed:false,
+    matchReason:'<strong>4.8★</strong> specifically for Long Cuts · Licensed cosmetologist confirmed by Yelp',
+    isSpec:false, inApp:true, topMatch:false,
+  },
+  {
+    id:'milvali', name:'Milvali SF', emoji:'M',
+    bg:'#fff8e1', fg:'#f57f17',
+    stars:'★★★★½', rating:4.5, reviews:352,
+    priceVal:120, priceMain:'$120+', priceSub:'$135+ with Fiona',
+    slots:[
+      {label:'Tmrw 3:00 PM', ext:true},
+      {label:'Fri 10:00 AM', ext:true},
+    ],
+    specType:'parsed', specLabel:'⚡ Auto-parsed',
+    stylists:'Honey · Mercy · Fiona', autoParsed:true,
+    matchReason:'Stylists detected in freeform response · <strong>Honey & Mercy</strong> from $120, <strong>Fiona</strong> from $135',
+    isSpec:false, inApp:false, topMatch:false,
+  },
+  {
+    id:'blake', name:'Blake Charles Salon', emoji:'B',
+    bg:'#f9e8f0', fg:'#c2185b',
+    stars:'★★★★', rating:4.3, reviews:1147,
+    priceVal:180, priceMain:'$180', priceSub:'flat rate',
+    slots:[
+      {label:'11:45 AM', ext:false},
+      {label:'1:00 PM', ext:false},
+      {label:'2:30 PM', ext:false},
+    ],
+    specType:'generalist', specLabel:'Generalist',
+    stylists:null, autoParsed:false,
+    matchReason:'No specialty signals detected in reviews or portfolio',
+    isSpec:false, inApp:true, topMatch:false,
+  },
+  {
+    id:'code', name:'CODE Salon', emoji:'C',
+    bg:'#e8f5ff', fg:'#0288d1',
+    stars:'★★★★½', rating:4.4, reviews:1147,
+    priceVal:999, priceMain:'—', priceSub:null,
+    slots:[
+      {label:'Book on site', ext:true},
+    ],
+    specType:'generalist', specLabel:'—',
+    stylists:null, autoParsed:false,
+    matchReason:null,
+    isSpec:false, inApp:false, topMatch:false,
+  },
+];
+
+let activeFilters = new Set();
+let currentSort = 'match';
+let booked = {};
+
+function filtered() {
+  return SALONS.filter(s => {
+    if (activeFilters.has('spec') && !s.isSpec) return false;
+    if (activeFilters.has('inapp') && !s.inApp) return false;
+    if (activeFilters.has('u100') && s.priceVal >= 100) return false;
+    return true;
+  });
+}
+
+function sorted(data) {
+  const d = [...data];
+  if (currentSort === 'price_asc') d.sort((a,b) => a.priceVal - b.priceVal);
+  else if (currentSort === 'price_desc') d.sort((a,b) => b.priceVal - a.priceVal);
+  else if (currentSort === 'soonest') d.sort((a,b) => (a.slots[0]?.ext ? 1:-1) - (b.slots[0]?.ext ? 1:-1) || a.priceVal - b.priceVal);
+  else d.sort((a,b) => (b.topMatch?1:0)-(a.topMatch?1:0) || b.rating-a.rating);
+  return d;
+}
+
+function render() {
+  const tbody = document.getElementById('tbody');
+  const data = sorted(filtered());
+  tbody.innerHTML = '';
+  if (!data.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No salons match your current filters. Try removing a filter above.</td></tr>';
+    return;
+  }
+  data.forEach((s, i) => {
+    const tr = document.createElement('tr');
+    if (s.topMatch) tr.classList.add('top-match');
+    tr.style.animationDelay = (i*0.04)+'s';
+
+    // slots
+    const slotsHtml = s.slots.map(slot => {
+      const k = s.id+'_'+slot.label;
+      if (booked[k]) return `<div class="slot-btn booked">✓ ${slot.label}</div>`;
+      if (slot.ext) return `<div class="slot-btn ext" onclick="book('${s.id}','${slot.label}',true,'${s.name}')">${slot.label} <span class="ext-arrow">↗</span></div>`;
+      return `<div class="slot-btn" onclick="book('${s.id}','${slot.label}',false,'${s.name}')">${slot.label}</div>`;
+    }).join('');
+
+    // specialty
+    let specHtml = `<div class="spec-badge ${s.specType}">${s.specLabel}</div>`;
+    if (s.stylists) specHtml += `<div class="spec-stylists">${s.stylists}</div>`;
+    if (s.autoParsed) specHtml += `<div class="auto-flag">⚠ Auto-parsed · <a href="#" style="color:inherit;text-decoration:underline" onclick="showToast('Opening Milvali SF chat to confirm...');return false">Confirm?</a></div>`;
+
+    // price
+    let priceHtml = `<div class="price-main">${s.priceMain}</div>`;
+    if (s.priceSub) priceHtml += `<div class="price-sub">${s.priceSub}</div>`;
+    if (!s.inApp && s.priceMain === '—') priceHtml += `<div class="price-ext">↗ codesalonsf.com</div>`;
+
+    // match reason
+    const matchHtml = s.matchReason
+      ? `<div class="match-reason">${s.matchReason}</div>`
+      : `<div class="match-none">No signals detected</div>`;
+
+    const topBadge = s.topMatch ? `<div class="top-badge">⭐ Top Match</div>` : '';
+
+    tr.innerHTML = `
+      <td>
+        <div class="salon-cell">
+          <div class="s-av" style="background:${s.bg};color:${s.fg}">${s.emoji}</div>
+          <div>
+            <div class="s-name">${s.name}</div>
+            <div><span class="s-stars">${s.stars}</span><span class="s-rc">(${s.reviews})</span></div>
+            ${topBadge}
+          </div>
+        </div>
+      </td>
+      <td>${priceHtml}</td>
+      <td><div class="slots-wrap">${slotsHtml}</div></td>
+      <td>${specHtml}</td>
+      <td>${matchHtml}</td>
+      <td><button class="chat-btn" onclick="goChat('${s.name}')">→ Chat</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function sortTable(type, btn) {
+  currentSort = type;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  render();
+}
+
+function toggleFilter(type, btn) {
+  activeFilters.has(type) ? activeFilters.delete(type) : activeFilters.add(type);
+  btn.classList.toggle('active');
+  render();
+}
+
+function book(id, label, isExt, name) {
+  if (isExt) { showToast(`↗ Opening ${name}'s booking site...`); return; }
+  booked[id+'_'+label] = true;
+  showToast(`✓ Booking requested at ${name} · ${label}`);
+  render();
+}
+
+function goChat(name) {
+  showToast(`→ Opening chat with ${name}...`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+render();
+</script>
+</body>
+</html>
