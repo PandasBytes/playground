@@ -2,7 +2,9 @@
 **PM Portfolio Case Study · Emeri Z. · March 2026**
 
 [Demo 1 Structured Quotes](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)
+
 [Demo 2 Quote Comparison](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)
+
 **For full walkthrough (WIP):** [Yelp Quote Request Enhancements](https://docs.google.com/presentation/d/1O6vqkzqjAslaHLz_IwwlLA8ckOK2TnhjbLTSVw5Mlfw/edit?usp=sharing)
 
 
