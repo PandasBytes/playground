@@ -1,9 +1,9 @@
 # Yelp — Quote Flow Redesign
 **PM Portfolio Case Study · Emeri Z. · March 2026**
 
-[Demo 1 Structured Quotes](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)
+[Demo 1 Structured Quotes](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)
 
-[Demo 2 Quote Comparison](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)
+[Demo 2 Quote Comparison](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)
 
 **For full walkthrough (WIP):** [Yelp Quote Request Enhancements](https://docs.google.com/presentation/d/1O6vqkzqjAslaHLz_IwwlLA8ckOK2TnhjbLTSVw5Mlfw/edit?usp=sharing)
 
@@ -23,10 +23,10 @@ This project redesigns the flow in two phases:
 ## Files
 | File | What it is | Add'l Links|
 |---|---| ---|
-| `yelp-quote-object-prd.md` | PRD 1: Structured Quote Object | [Demo 1](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)|
-| `yelp-quote-mockup.html` | Interactive mockup — merchant form + consumer chat |  [Demo 1](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)|
-| `yelp-comparison-matrix-prd.md` | PRD 2: Comparison Matrix |[Demo 2](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)|
-| `yelp-comparison-matrix.html` | Interactive mockup — sortable/filterable quote table | [Demo 2](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)|
+| `yelp-quote-object-prd.md` | PRD 1: Structured Quote Object |[Demo 1](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)|
+| `yelp-quote-mockup.html` | Interactive mockup — merchant form + consumer chat | [Demo 1](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)|
+| `yelp-comparison-matrix-prd.md` | PRD 2: Comparison Matrix |[Demo 2](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)|
+| `yelp-comparison-matrix.html` | Interactive mockup — sortable/filterable quote table |  [Demo 2](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)|
 
 ## North Star Metric
 Booking Conversion Rate (BCR). The hypothesis: structured quotes + a comparison view drive 2x more bookings than the current freeform chat.
