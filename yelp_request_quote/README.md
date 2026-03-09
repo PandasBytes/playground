@@ -1,11 +1,12 @@
 # Yelp — Quote Flow Redesign
 **PM Portfolio Case Study · Emeri Z. · March 2026**
 
+**For Full Project Overview:** [Yelp Quote Request Enhancements](https://docs.google.com/presentation/d/1O6vqkzqjAslaHLz_IwwlLA8ckOK2TnhjbLTSVw5Mlfw/edit?usp=sharing)
+
+
 [Demo 1 Structured Quotes](https://claude.ai/public/artifacts/eb543e74-f7bf-4e4e-9d59-504a63a5f173)
 
 [Demo 2 Quote Comparison](https://claude.ai/public/artifacts/45ba05ec-6225-4fb9-98ba-1b8816cb719c)
-
-**For full walkthrough (WIP):** [Yelp Quote Request Enhancements](https://docs.google.com/presentation/d/1O6vqkzqjAslaHLz_IwwlLA8ckOK2TnhjbLTSVw5Mlfw/edit?usp=sharing)
 
 
 Morning of Fri March 6, I wanted to book a haircut in San Francisco. I used Yelp's "Request a Quote" feature, messaged 5 salons, and the experience wasn't delightful — one sent me to their website, one gave me a wall of text with prices buried inside, and none of them gave me a way to actually book without leaving the app.
